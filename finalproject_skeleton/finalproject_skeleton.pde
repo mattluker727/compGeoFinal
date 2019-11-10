@@ -8,9 +8,9 @@ Polygon             poly       = new Polygon();
 
 
 boolean saveImage = false;
-boolean showPotentialDiagonals = true;
-boolean showDiagonals = true;
-
+boolean showPotentialDiagonals = false;
+boolean showDiagonals = false;
+boolean showArtGallery = false;
 
 void setup(){
   size(800,800,P3D);
@@ -25,6 +25,13 @@ void draw(){
   scale( 1, -1, 1 );
   
   strokeWeight(3);
+  
+  // ---------- Art Gallery ---------------
+  if (showArtGallery && poly.isSimple()){
+    poly.earClipping();
+    poly.getDual();
+  }
+  //---------------
   
   fill(0);
   noStroke();
@@ -78,6 +85,8 @@ void draw(){
   textRHC( "p: Show/Hide Potential Diagonals", 10, height-60 );
   textRHC( "c: Clear Polygon", 10, height-80 );
   textRHC( "s: Save Image", 10, height-100 );
+  textRHC( "a: Art Gallery", 10, height-120 );
+
   
 
   textRHC( "Clockwise: " + (poly.cw()?"True":"False"), 550, 80 );
@@ -86,16 +95,18 @@ void draw(){
   textRHC( "Simple Boundary: " + (poly.isSimple()?"True":"False"), 550, 20 );
   
   for( int i = 0; i < points.size(); i++ ){
-    textRHC( i+1, points.get(i).p.x+5, points.get(i).p.y+15 );
+    textRHC( i, points.get(i).p.x+5, points.get(i).p.y+15 );
   }
   
   if( saveImage ) saveFrame( ); 
   saveImage = false;
   
+  
 }
 
 
 void keyPressed(){
+  if( key == 'a' ) showArtGallery = true;
   if( key == 's' ) saveImage = true;
   if( key == 'c' ){ points.clear(); poly = new Polygon(); }
   if( key == 'p' ) showPotentialDiagonals = !showPotentialDiagonals;
