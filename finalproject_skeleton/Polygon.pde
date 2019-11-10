@@ -186,5 +186,32 @@ class Polygon {
        bdry.add( new Edge( p.get(p.size()-1), p.get(0) ) );
      }
    }
+   
+   Point nextNeighbor(Point v, Polygon p){
+     
+     int vertex_spot = 0;
+     for(int i = 0; i < p.p.size(); i++){
+       if(p.p.get(i) == v) vertex_spot = i;
+     }
+     
+     if (vertex_spot ++ != p.p.size()){
+       return p.p.get(vertex_spot++);
+     } else return p.p.get(0);
+   }
+   
+   void shadeArea(Point v, Polygon p){
+     
+     Polygon view = new Polygon();
+     view.addPoint(v);   
+     
+     int vertex_spot = 0;
+     for(int i = 0; i < p.p.size(); i++){
+       if(p.p.get(i) == v) vertex_spot = i;
+     }
+       
+     Point currentPoint = nextNeighbor(v, p);
+     while(currentPoint != v){
+     }
+   }
 
 }

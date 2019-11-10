@@ -8,8 +8,8 @@ Polygon             poly       = new Polygon();
 
 
 boolean saveImage = false;
-boolean showPotentialDiagonals = true;
-boolean showDiagonals = true;
+boolean showPotentialDiagonals = false;
+boolean showDiagonals = false;
 
 
 void setup(){
