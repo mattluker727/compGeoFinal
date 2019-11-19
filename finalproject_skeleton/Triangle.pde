@@ -33,9 +33,6 @@ class Triangle {
      float Oy = (p0.p.y + p1.p.y + p2.p.y)/3;
      
      Point center = new Point(Ox, Oy);
-     fill(0, 0, 0);
-     center.draw();
-     noFill();
      
      return center;
    }

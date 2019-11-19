@@ -190,14 +190,17 @@ class Polygon {
    // ------------------------------ Art Gallery -------------------
    ArrayList<Triangle> solution = new ArrayList<Triangle>();
    ArrayList<Edge> dual = new ArrayList<Edge>();
-   // Map indexes of solution to one another based on if Triangles are neighbors
-   //Map<Integer,ArrayList<Integer>> adjacency = new HashMap<Integer,ArrayList<Integer>>();
    
    // adjacency list of solution based on if Triangles are neighbors
    LinkedList<Integer> adjList[];
    
    // result of dfs on adjList
    ArrayList<Integer> dfsOrder = new ArrayList<Integer>();
+   
+   // lists to hold solution of coloring
+   ArrayList<Point> red = new ArrayList<Point>();
+   ArrayList<Point> green = new ArrayList<Point>();
+   ArrayList<Point> blue = new ArrayList<Point>();
    
    float M_PI = 3.1415926535897932384626433832795;
    
@@ -366,11 +369,11 @@ class Polygon {
      }
      
      //print(solution.size());
-      for(int i = 0; i < solution.size(); i++ ){
-        noFill();
-        solution.get(i).draw();
-        noFill();
-     }
+     // for(int i = 0; i < solution.size(); i++ ){
+     //   noFill();
+     //   solution.get(i).draw();
+     //   noFill();
+     //}
    }
     
    boolean neighborTriangle(Triangle A, Triangle B){
@@ -392,11 +395,6 @@ class Polygon {
      
      dual.clear();
      
-     // set up adjacency list
-     //for (int i = 0; i < solution.size(); i++ ){
-     //  adjacency.put(i, new ArrayList<Integer>());
-     //}
-     
      // setup linked list
      adjList = new LinkedList[solution.size() + 1]; 
      
@@ -411,15 +409,6 @@ class Polygon {
            // add to dual drawing
            dual.add(new Edge(solution.get(i).center(), solution.get(j).center()));
            
-           // add to adjacency list          
-           //ArrayList<Integer> listI = adjacency.get(i);
-           //listI.add(j);
-           //adjacency.put(i, listI);
-           
-           //ArrayList<Integer> listJ = adjacency.get(j);
-           //listJ.add(i);
-           //adjacency.put(j, listJ);
-           
            // add to linked list
            adjList[i].add(j); 
            adjList[j].add(i); 
@@ -428,13 +417,8 @@ class Polygon {
      }
      
      //print(solution.size());
-     for(int i = 0; i < dual.size(); i++ ){
-       dual.get(i).draw();
-     }
-     
-     // print adjacency list
-     //for(int i = 0; i < adjacency.size(); i++ ){
-     //  print(i + ":" + adjacency.get(i) + " ");
+     //for(int i = 0; i < dual.size(); i++ ){
+     //  dual.get(i).draw();
      //}
      
      // choose node to start dfs on and identify parent node
@@ -480,9 +464,9 @@ class Polygon {
    
    // use dfs order to color triangulated polygon
    void coloring(){
-     ArrayList<Point> red = new ArrayList<Point>();
-     ArrayList<Point> green = new ArrayList<Point>();
-     ArrayList<Point> blue = new ArrayList<Point>();
+     red.clear();
+     green.clear();
+     blue.clear();
      
      // color initial triangle
      red.add(solution.get(dfsOrder.get(0)).p0);
@@ -546,6 +530,32 @@ class Polygon {
        }
      }
      
+   }
+   
+   void drawTriangulation(){
+     // draw triangles
+     for(int i = 0; i < solution.size(); i++ ){
+        noFill();
+        solution.get(i).draw();
+        noFill();
+     }
+   }
+   
+   void drawDual(){
+     // draw dual
+     for(int i = 0; i < dual.size(); i++ ){
+       dual.get(i).draw();
+     }
+     
+     // draw points on dual
+     for(int i = 0; i < solution.size(); i++ ){
+        fill(0, 0, 0);
+        solution.get(i).center().draw();
+        noFill();
+     }
+   }
+   
+   void drawColoring(){
      // red 
      print("\nRed: ");
      fill(255, 0, 0);
@@ -568,7 +578,6 @@ class Polygon {
        ellipse(blue.get(i).p.x, blue.get(i).p.y, 20, 20);
      }
      print("\n");
-     
    }
 
 
