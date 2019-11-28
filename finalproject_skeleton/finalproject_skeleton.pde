@@ -11,6 +11,9 @@ boolean saveImage = false;
 boolean showPotentialDiagonals = false;
 boolean showDiagonals = false;
 boolean showArtGallery = false;
+boolean showVision = false;
+boolean showExtensions = false;
+boolean showIntersections = false;
 
 void setup(){
   size(800,800,P3D);
@@ -25,13 +28,17 @@ void draw(){
   scale( 1, -1, 1 );
 
   strokeWeight(3);
+  
 
   // ---------- Art Gallery ---------------
   if (showArtGallery && poly.isSimple()){
     poly.earClipping();
-    poly.getDual();
+    ArrayList<Point> viewPoints = poly.getDual();
+    
+    if ( showVision ) poly.viewColor( viewPoints );
   }
   //---------------
+  
 
   fill(0);
   noStroke();
@@ -106,7 +113,10 @@ void draw(){
 
 
 void keyPressed(){
-  if( key == 'a' ) showArtGallery = true;
+  if( key == 'a' ) showArtGallery = !showArtGallery;
+  if( key == 'f' ) showVision = !showVision;
+  if( key == 'g' ) showExtensions = !showExtensions;
+  if( key == 'h' ) showIntersections = !showIntersections;
   if( key == 's' ) saveImage = true;
   if( key == 'c' ){ points.clear(); poly = new Polygon(); }
   if( key == 'p' ) showPotentialDiagonals = !showPotentialDiagonals;
