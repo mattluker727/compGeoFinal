@@ -586,9 +586,12 @@ class Polygon {
    void viewColor( ArrayList<Point> viewPoints){
      print("\n will now color");
      //print(viewPoints);
-     
-     //for (int i = 0; i < viewPoints.size(); i++) buildPoly(viewPoints.get(i));
-     buildPoly(viewPoints.get(0));
+     int colorFill = 120;
+     for (int i = 0; i < viewPoints.size(); i++){ //buildPoly(viewPoints.get(i));
+       buildPoly(viewPoints.get(0));
+       fill(colorFill);
+       colorFill += 100;
+     }
    }
    
    void buildPoly( Point viewPoint){
@@ -626,14 +629,73 @@ class Polygon {
        Edge newEdge = createdBoundary(extension, pt1);
        
        if (newEdge != null){
-         Edge addEdge = new Edge(recentPoint, pt1);
-         newPoly.p.add(pt1);
-         newPoly.bdry.add(addEdge);
          
-         newPoly.p.add(newEdge.p1);
-         newPoly.bdry.add(newEdge);
+         if (pointSide(visiblePoints.get(i), newEdge) == 1){
+           print("\nLeft Side?\n");
+           if (poly.cw()){
+             Edge addEdge = new Edge(recentPoint, pt1);
+             newPoly.p.add(pt1);
+             newPoly.bdry.add(addEdge);
+             
+             newPoly.p.add(newEdge.p1);
+             newPoly.bdry.add(newEdge);
+             
+           } else {
+             
+             newPoly.p.add(newEdge.p1);
+             newPoly.bdry.add(newEdge);
+             
+             Edge addEdge = new Edge(recentPoint, pt1);
+             newPoly.p.add(pt1);
+             newPoly.bdry.add(addEdge);
+           }
+           
+         } else if (pointSide(visiblePoints.get(i), newEdge) == -1){
+           print("\nRight Side?\n");
+           
+           if (poly.cw()){
+             newPoly.p.add(newEdge.p1);
+             newPoly.bdry.add(newEdge);
+             
+             Edge addEdge = new Edge(recentPoint, pt1);
+             newPoly.p.add(pt1);
+             newPoly.bdry.add(addEdge);
+           } else {
+             
+             Edge addEdge = new Edge(recentPoint, pt1);
+             newPoly.p.add(pt1);
+             newPoly.bdry.add(addEdge);
+             
+             newPoly.p.add(newEdge.p1);
+             newPoly.bdry.add(newEdge);
+           }
+           
+         } else print ("\nno side\n");
          
-         recentPoint = newEdge.p1;
+         //if (pointCW(visiblePoints.get(i))){
+           
+         //  newPoly.p.add(newEdge.p1);
+         //  newPoly.bdry.add(newEdge);
+           
+         //  Edge addEdge = new Edge(recentPoint, pt1);
+         //  newPoly.p.add(pt1);
+         //  newPoly.bdry.add(addEdge);
+           
+         //  recentPoint = newEdge.p1;
+           
+           
+         //} else {
+           
+         //  Edge addEdge = new Edge(recentPoint, pt1);
+         //  newPoly.p.add(pt1);
+         //  newPoly.bdry.add(addEdge);
+           
+         //  newPoly.p.add(newEdge.p1);
+         //  newPoly.bdry.add(newEdge);
+           
+         //  recentPoint = newEdge.p1;
+           
+         //}
          
        } else {
          Edge addEdge = new Edge(recentPoint, pt1);
@@ -645,19 +707,82 @@ class Polygon {
      }
 
      drawPoly(newPoly);
-     for(int i = 0; i < newPoly.p.size(); i++){
-       print("\n order x: " + newPoly.p.get(i).getX() + ", y: " + newPoly.p.get(i).getY());
-     }
+     //for(int i = 0; i < newPoly.p.size(); i++){
+     //  print("\n order x: " + newPoly.p.get(i).getX() + ", y: " + newPoly.p.get(i).getY());
+     //}
 
    }
+   int pointSide(Point pt, Edge e){
+     Point pt2 = pt;
+     Point pt3 = pt;
+     for (int i = 0; i < p.size(); i++){
+       if (p.get(i) == pt){
+         if (i == 0){
+           pt2 = p.get(1);
+           pt3 = p.get(p.size() - 1);
+         }
+         else if( i == p.size() - 1){
+           pt2 = p.get(0);
+           pt3 = p.get(i - 1);
+         } else {
+           pt2 = p.get(i + 1);
+           pt3 = p.get(i - 1);
+         }
+       }
+     }
+     if (pt2 == pt) return 0;
+         
+      //((Bx - Ax) * (Y - Ay) - (By - Ay) * (X - Ax))
+       
+     float Ax = e.p0.getX();
+     float Ay = e.p0.getY();
+     float Bx = e.p1.getX();
+     float By = e.p1.getY();
+     
+     // determine if either point is on left or right side
+     float location1 = ((Bx - Ax) * (pt2.getY() - Ay) - (By - Ay) * (pt2.getX() - Ax));
+     float location2 = ((Bx - Ax) * (pt3.getY() - Ay) - (By - Ay) * (pt3.getX() - Ax));
+     if (location1 > 0 || location2 > 0) return 1;
+     if (location1 < 0 || location2 < 0) return -1;
+         
+     return 0;
+   }
+   //boolean pointCW(Point pt){
+   //  Point pt2;
+   //  Point pt3;
+   //  for (int i = 0; i < p.size(); i++){
+   //    if (p.get(i) == pt){
+   //      if (i == 0){
+   //        pt2 = p.get(1);
+   //        pt3 = p.get(p.size() - 1);
+   //      }
+   //      else if( i == p.size() - 1){
+   //        pt2 = p.get(0);
+   //        pt3 = p.get(i - 1);
+   //      } else {
+   //        pt2 = p.get(i + 1);
+   //        pt3 = p.get(i - 1);
+   //      }
+         
+   //      Triangle tri = new Triangle(pt, pt2, pt3);
+         
+   //      return tri.cw();
+   //    }
+   //  }
+   //  return true;
+   //}
    
    void drawPoly(Polygon newpoly){
      beginShape();
      
      for(int i = 0; i < newpoly.p.size(); i++){
-       vertex(newpoly.p.get(i).getX(), newpoly.p.get(i).getY());
-       print("\n order x: " + newpoly.p.get(i).getX() + ", y: " + newpoly.p.get(i).getY());
+       print("\n" + newpoly.p.get(i));
+       if (!Float.isNaN(newpoly.p.get(i).getX())){
+         vertex(newpoly.p.get(i).getX(), newpoly.p.get(i).getY());
+         // print("\n order x: " + newpoly.p.get(i).getX() + ", y: " + newpoly.p.get(i).getY());
+       }
      }
+     print("\n");
      endShape();
    }
    

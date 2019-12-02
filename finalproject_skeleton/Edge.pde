@@ -75,6 +75,7 @@ class Edge{
     else
       t = (R.y + Q.y*u) / D.y;
 
+    
     if( t < 0 || t > 1 ) return null;
      
     PVector P = PVector.add( P1, PVector.mult( Q, u ) );
