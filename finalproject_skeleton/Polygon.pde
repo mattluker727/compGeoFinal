@@ -187,7 +187,7 @@ class Polygon {
      }
    }
    
-   // ------------------------------ Art Gallery -------------------
+   // ------------------------------ Art Gallery ------------------------------
    ArrayList<Triangle> solution = new ArrayList<Triangle>();
    ArrayList<Edge> dual = new ArrayList<Edge>();
    
@@ -202,27 +202,11 @@ class Polygon {
    ArrayList<Point> green = new ArrayList<Point>();
    ArrayList<Point> blue = new ArrayList<Point>();
    
-   float M_PI = 3.1415926535897932384626433832795;
-   
    int pointType(int prev, int current, int next){
      Triangle test = new Triangle(p.get(prev), p.get(current), p.get(next));
-     
-     Point A = p.get(prev);
-     Point B = p.get(current);
-     Point C = p.get((next));
-     
-     float orientation = (B.p.y - A.p.y)*(C.p.x - B.p.x) - (C.p.y - B.p.y)*(B.p.x - A.p.x);
-     //if (orientation < 0) print("orient: ccw\n");
-     //else print("orient: cw\n");
-     
-     float atanA = atan2(A.p.x - B.p.x, A.p.y - B.p.y);
-     float atanC = atan2(C.p.x - B.p.x, C.p.y - B.p.y);
-     float diff = atanC - atanA;
 
-     //diff *= 180 / M_PI;    
      if (test.ccw() == true) print("ccw \n");
      if (test.cw() == true) print("cw \n");
-     //print("angle: " + diff + "\n");
      
      // check if current triangle is convex
      if ((this.ccw() && test.ccw() == true) || (this.cw() && test.cw() == true)){
@@ -369,11 +353,6 @@ class Polygon {
      }
      
      //print(solution.size());
-     // for(int i = 0; i < solution.size(); i++ ){
-     //   noFill();
-     //   solution.get(i).draw();
-     //   noFill();
-     //}
    }
     
    boolean neighborTriangle(Triangle A, Triangle B){
@@ -417,9 +396,6 @@ class Polygon {
      }
      
      //print(solution.size());
-     //for(int i = 0; i < dual.size(); i++ ){
-     //  dual.get(i).draw();
-     //}
      
      // choose node to start dfs on and identify parent node
      int node = 0;
