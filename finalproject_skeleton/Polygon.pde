@@ -212,7 +212,8 @@ class Polygon {
      // check if current triangle is convex
      if ((this.ccw() && test.ccw() == true) || (this.cw() && test.cw() == true)){
        Edge testEar = new Edge(p.get(prev), p.get(next));
-       if (crossesBoundary(testEar) == false){
+       Point midpoint = new Point((testEar.p0.p.x + testEar.p1.p.x)/2, (testEar.p0.p.y + testEar.p1.p.y)/2);
+       if (crossesBoundary(testEar) == false && pointInPolygon(midpoint) == true){
          return 2; // ear
        }
        else{
