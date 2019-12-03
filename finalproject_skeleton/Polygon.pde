@@ -201,6 +201,7 @@ class Polygon {
    ArrayList<Point> red = new ArrayList<Point>();
    ArrayList<Point> green = new ArrayList<Point>();
    ArrayList<Point> blue = new ArrayList<Point>();
+   ArrayList<Point> colorSolution = new ArrayList<Point>();
    
    int pointType(int prev, int current, int next){
      Triangle test = new Triangle(p.get(prev), p.get(current), p.get(next));
@@ -506,6 +507,23 @@ class Polygon {
        }
      }
      
+     // find smallest solution set
+     colorSolution = (ArrayList<Point>) red.clone();
+     
+     if (blue.size() < colorSolution.size()){
+       colorSolution = (ArrayList<Point>) blue.clone();
+     }
+     
+     if (green.size() < colorSolution.size()){
+       colorSolution = (ArrayList<Point>) green.clone();
+     }
+     
+     // print solution
+     print("\nSolution:\t");
+     for(int i = 0; i < colorSolution.size(); i++ ){
+       print(colorSolution.get(i) + " ");
+     }
+     
    }
    
    void drawTriangulation(){
@@ -533,21 +551,23 @@ class Polygon {
    
    void drawColoring(){
      // red 
-     print("\nRed: ");
+     print("\nRed:\t");
      fill(255, 0, 0);
      for(int i = 0; i < red.size(); i++ ){
        print(red.get(i) + " ");
        ellipse(red.get(i).p.x, red.get(i).p.y, 20, 20);
      }
-     print("\nGreen: ");
+     print("\nGreen:\t");
      fill(0, 255, 0);
+     
      // green 
      for(int i = 0; i < green.size(); i++ ){
        print(green.get(i) + " ");
        ellipse(green.get(i).p.x, green.get(i).p.y, 20, 20);
      }
-     print("\nBlue: ");
+     print("\nBlue:\t");
      fill(0, 0, 255);
+     
      // blue 
      for(int i = 0; i < blue.size(); i++ ){
        print(blue.get(i) + " ");
