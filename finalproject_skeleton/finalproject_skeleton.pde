@@ -10,7 +10,10 @@ Polygon             poly       = new Polygon();
 boolean saveImage = false;
 boolean showPotentialDiagonals = false;
 boolean showDiagonals = false;
-boolean showArtGallery = false;
+boolean solveArtGallery = false;
+boolean showTriangulation = false;
+boolean showDual = false;
+boolean showColoring = false;
 
 void setup(){
   size(800,800,P3D);
@@ -25,13 +28,6 @@ void draw(){
   scale( 1, -1, 1 );
   
   strokeWeight(3);
-  
-  // ---------- Art Gallery ---------------
-  if (showArtGallery && poly.isSimple()){
-    poly.earClipping();
-    poly.getDual();
-  }
-  //---------------
   
   fill(0);
   noStroke();
@@ -85,9 +81,11 @@ void draw(){
   textRHC( "p: Show/Hide Potential Diagonals", 10, height-60 );
   textRHC( "c: Clear Polygon", 10, height-80 );
   textRHC( "s: Save Image", 10, height-100 );
-  textRHC( "a: Art Gallery", 10, height-120 );
+  textRHC( "a: Solve Art Gallery", 10, height-120 );
+  textRHC( "t: Show triangulation", 10, height-140 );
+  textRHC( "u: Show dual", 10, height-160 );
+  textRHC( "o: Show coloring", 10, height-180 );
 
-  
 
   textRHC( "Clockwise: " + (poly.cw()?"True":"False"), 550, 80 );
   textRHC( "Counterclockwise: " + (poly.ccw()?"True":"False"), 550, 60 );
@@ -101,12 +99,31 @@ void draw(){
   if( saveImage ) saveFrame( ); 
   saveImage = false;
   
+  // ---------- Art Gallery ---------------
+  if (solveArtGallery && poly.isSimple()){
+    poly.earClipping();
+    poly.getDual();
+    if (showTriangulation){
+     poly.drawTriangulation();
+    }
+    if (showDual){
+     poly.drawDual();
+    }
+    if (showColoring){
+     poly.drawColoring();
+    }
+    
+  }
+  //---------------
+  
   
 }
 
-
 void keyPressed(){
-  if( key == 'a' ) showArtGallery = true;
+  if( key == 'a' ) solveArtGallery = true;
+  if( key == 't' ) showTriangulation = !showTriangulation;
+  if( key == 'u' ) showDual = !showDual;
+  if( key == 'o' ) showColoring = !showColoring;
   if( key == 's' ) saveImage = true;
   if( key == 'c' ){ points.clear(); poly = new Polygon(); }
   if( key == 'p' ) showPotentialDiagonals = !showPotentialDiagonals;

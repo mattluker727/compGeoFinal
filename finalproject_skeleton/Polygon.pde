@@ -187,11 +187,9 @@ class Polygon {
      }
    }
    
-   // ------------------------------ Art Gallery -------------------
+   // ------------------------------ Art Gallery ------------------------------
    ArrayList<Triangle> solution = new ArrayList<Triangle>();
    ArrayList<Edge> dual = new ArrayList<Edge>();
-   // Map indexes of solution to one another based on if Triangles are neighbors
-   //Map<Integer,ArrayList<Integer>> adjacency = new HashMap<Integer,ArrayList<Integer>>();
    
    // adjacency list of solution based on if Triangles are neighbors
    LinkedList<Integer> adjList[];
@@ -199,27 +197,17 @@ class Polygon {
    // result of dfs on adjList
    ArrayList<Integer> dfsOrder = new ArrayList<Integer>();
    
-   float M_PI = 3.1415926535897932384626433832795;
+   // lists to hold solution of coloring
+   ArrayList<Point> red = new ArrayList<Point>();
+   ArrayList<Point> green = new ArrayList<Point>();
+   ArrayList<Point> blue = new ArrayList<Point>();
+   ArrayList<Point> colorSolution = new ArrayList<Point>();
    
    int pointType(int prev, int current, int next){
      Triangle test = new Triangle(p.get(prev), p.get(current), p.get(next));
-     
-     Point A = p.get(prev);
-     Point B = p.get(current);
-     Point C = p.get((next));
-     
-     float orientation = (B.p.y - A.p.y)*(C.p.x - B.p.x) - (C.p.y - B.p.y)*(B.p.x - A.p.x);
-     //if (orientation < 0) print("orient: ccw\n");
-     //else print("orient: cw\n");
-     
-     float atanA = atan2(A.p.x - B.p.x, A.p.y - B.p.y);
-     float atanC = atan2(C.p.x - B.p.x, C.p.y - B.p.y);
-     float diff = atanC - atanA;
 
-     //diff *= 180 / M_PI;    
      if (test.ccw() == true) print("ccw \n");
      if (test.cw() == true) print("cw \n");
-     //print("angle: " + diff + "\n");
      
      // check if current triangle is convex
      if ((this.ccw() && test.ccw() == true) || (this.cw() && test.cw() == true)){
@@ -366,11 +354,6 @@ class Polygon {
      }
      
      //print(solution.size());
-      for(int i = 0; i < solution.size(); i++ ){
-        noFill();
-        solution.get(i).draw();
-        noFill();
-     }
    }
     
    boolean neighborTriangle(Triangle A, Triangle B){
@@ -392,11 +375,6 @@ class Polygon {
      
      dual.clear();
      
-     // set up adjacency list
-     //for (int i = 0; i < solution.size(); i++ ){
-     //  adjacency.put(i, new ArrayList<Integer>());
-     //}
-     
      // setup linked list
      adjList = new LinkedList[solution.size() + 1]; 
      
@@ -411,15 +389,6 @@ class Polygon {
            // add to dual drawing
            dual.add(new Edge(solution.get(i).center(), solution.get(j).center()));
            
-           // add to adjacency list          
-           //ArrayList<Integer> listI = adjacency.get(i);
-           //listI.add(j);
-           //adjacency.put(i, listI);
-           
-           //ArrayList<Integer> listJ = adjacency.get(j);
-           //listJ.add(i);
-           //adjacency.put(j, listJ);
-           
            // add to linked list
            adjList[i].add(j); 
            adjList[j].add(i); 
@@ -428,14 +397,6 @@ class Polygon {
      }
      
      //print(solution.size());
-     for(int i = 0; i < dual.size(); i++ ){
-       dual.get(i).draw();
-     }
-     
-     // print adjacency list
-     //for(int i = 0; i < adjacency.size(); i++ ){
-     //  print(i + ":" + adjacency.get(i) + " ");
-     //}
      
      // choose node to start dfs on and identify parent node
      int node = 0;
@@ -480,9 +441,9 @@ class Polygon {
    
    // use dfs order to color triangulated polygon
    void coloring(){
-     ArrayList<Point> red = new ArrayList<Point>();
-     ArrayList<Point> green = new ArrayList<Point>();
-     ArrayList<Point> blue = new ArrayList<Point>();
+     red.clear();
+     green.clear();
+     blue.clear();
      
      // color initial triangle
      red.add(solution.get(dfsOrder.get(0)).p0);
@@ -546,29 +507,73 @@ class Polygon {
        }
      }
      
+     // find smallest solution set
+     colorSolution = (ArrayList<Point>) red.clone();
+     
+     if (blue.size() < colorSolution.size()){
+       colorSolution = (ArrayList<Point>) blue.clone();
+     }
+     
+     if (green.size() < colorSolution.size()){
+       colorSolution = (ArrayList<Point>) green.clone();
+     }
+     
+     // print solution
+     print("\nSolution:\t");
+     for(int i = 0; i < colorSolution.size(); i++ ){
+       print(colorSolution.get(i) + " ");
+     }
+     
+   }
+   
+   void drawTriangulation(){
+     // draw triangles
+     for(int i = 0; i < solution.size(); i++ ){
+        noFill();
+        solution.get(i).draw();
+        noFill();
+     }
+   }
+   
+   void drawDual(){
+     // draw dual
+     for(int i = 0; i < dual.size(); i++ ){
+       dual.get(i).draw();
+     }
+     
+     // draw points on dual
+     for(int i = 0; i < solution.size(); i++ ){
+        fill(0, 0, 0);
+        solution.get(i).center().draw();
+        noFill();
+     }
+   }
+   
+   void drawColoring(){
      // red 
-     print("\nRed: ");
+     print("\nRed:\t");
      fill(255, 0, 0);
      for(int i = 0; i < red.size(); i++ ){
        print(red.get(i) + " ");
        ellipse(red.get(i).p.x, red.get(i).p.y, 20, 20);
      }
-     print("\nGreen: ");
+     print("\nGreen:\t");
      fill(0, 255, 0);
+     
      // green 
      for(int i = 0; i < green.size(); i++ ){
        print(green.get(i) + " ");
        ellipse(green.get(i).p.x, green.get(i).p.y, 20, 20);
      }
-     print("\nBlue: ");
+     print("\nBlue:\t");
      fill(0, 0, 255);
+     
      // blue 
      for(int i = 0; i < blue.size(); i++ ){
        print(blue.get(i) + " ");
        ellipse(blue.get(i).p.x, blue.get(i).p.y, 20, 20);
      }
      print("\n");
-     
    }
 
 
