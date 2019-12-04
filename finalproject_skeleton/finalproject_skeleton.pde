@@ -15,7 +15,7 @@ boolean showVision = false;
 boolean showExtensions = false;
 boolean showIntersections = false;
 
-boolean solveArtGallery = false;
+boolean solveArtGallery = true;
 boolean showTriangulation = false;
 boolean showDual = false;
 boolean showColoring = false;
@@ -26,7 +26,7 @@ boolean debugInfo = false;
 
 
 void setup(){
-  size(800,800,P3D);
+  size(800,600,P3D);
   frameRate(30);
 }
 
@@ -89,12 +89,12 @@ void draw(){
   textRHC( "Controls", 10, height-20 );
   textRHC( "d: Show/Hide Diagonals", 10, height-40 );
   textRHC( "p: Show/Hide Potential Diagonals", 10, height-60 );
-  textRHC( "c: Clear Polygon", 10, height-80 );
-  textRHC( "s: Save Image", 10, height-100 );
-  textRHC( "a: Solve Art Gallery", 10, height-120 );
-  textRHC( "t: Show triangulation", 10, height-140 );
-  textRHC( "u: Show dual", 10, height-160 );
-  textRHC( "o: Show coloring", 10, height-180 );
+  // textRHC( "c: Clear Polygon", 10, height-80 );
+  // textRHC( "s: Save Image", 10, height-100 );
+  textRHC( "a: Solve Art Gallery", 10, height-80 );
+  textRHC( "t: Show triangulation", 10, height-100 );
+  textRHC( "u: Show dual", 10, height-120 );
+  textRHC( "o: Show coloring", 10, height-140 );
 
 
 
@@ -131,19 +131,18 @@ void draw(){
 }
 
 void keyPressed(){
-  if( key == 'a' ) solveArtGallery = true;
+  //if( key == 'a' ) solveArtGallery = true;
   if( key == 't' ) showTriangulation = !showTriangulation;
   if( key == 'u' ) showDual = !showDual;
   if( key == 'o' ) showColoring = !showColoring;
-
-  if( key == 's' ) saveImage = true;
-  if( key == 'c' ){ points.clear(); poly = new Polygon(); }
   if( key == 'p' ) showPotentialDiagonals = !showPotentialDiagonals;
   if( key == 'd' ) showDiagonals = !showDiagonals;
-  
-  if( key == 'j' ) nowColor = !nowColor;
   if( key == 'k' ) debugInfo = !debugInfo;
   if( key == 'v' ) changeColor = !changeColor;
+  if( key == 'a' ) {
+    nowColor = !nowColor;
+    showColoring = true;
+  }
 }
 
 
