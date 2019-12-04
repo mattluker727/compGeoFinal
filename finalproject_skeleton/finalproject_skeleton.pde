@@ -10,10 +10,10 @@ Polygon             poly       = new Polygon();
 boolean saveImage = false;
 boolean showPotentialDiagonals = false;
 boolean showDiagonals = false;
-boolean solveArtGallery = false;
-boolean showTriangulation = false;
-boolean showDual = false;
-boolean showColoring = false;
+boolean showArtGallery = false;
+boolean showVision = false;
+boolean showExtensions = false;
+boolean showIntersections = false;
 
 void setup(){
   size(800,800,P3D);
@@ -23,38 +23,38 @@ void setup(){
 
 void draw(){
   background(255);
-  
+
   translate( 0, height, 0);
   scale( 1, -1, 1 );
-  
+
   strokeWeight(3);
-  
+
   fill(0);
   noStroke();
   for( Point p : points ){
     p.draw();
   }
-  
+
   noFill();
   stroke(100);
   for( Edge e : edges ){
     e.draw();
   }
-  
+
   noStroke();
   for( Triangle t : triangles ){
     fill( 100, 100, 100 );
     if( t.ccw() ) fill( 200, 100, 100 );
-    if( t.cw()  ) fill( 100, 200, 100 ); 
+    if( t.cw()  ) fill( 100, 200, 100 );
     t.draw();
   }
-  
+
   stroke( 100, 100, 100 );
   if( poly.ccw() ) stroke( 100, 200, 100 );
-  if( poly.cw()  ) stroke( 200, 100, 100 ); 
+  if( poly.cw()  ) stroke( 200, 100, 100 );
   poly.draw();
-  
-  
+
+
   if( showPotentialDiagonals ){
     strokeWeight(1);
     stroke(100,100,100);
@@ -63,7 +63,7 @@ void draw(){
         e.drawDotted();
     }
   }
-  
+
   if( showDiagonals ){
     strokeWeight(4);
     stroke(100,100,200);
@@ -71,11 +71,11 @@ void draw(){
         e.draw();
     }
   }
-  
+
   fill(0);
   stroke(0);
   textSize(18);
-  
+
   textRHC( "Controls", 10, height-20 );
   textRHC( "d: Show/Hide Diagonals", 10, height-40 );
   textRHC( "p: Show/Hide Potential Diagonals", 10, height-60 );
@@ -87,18 +87,19 @@ void draw(){
   textRHC( "o: Show coloring", 10, height-180 );
 
 
+
   textRHC( "Clockwise: " + (poly.cw()?"True":"False"), 550, 80 );
   textRHC( "Counterclockwise: " + (poly.ccw()?"True":"False"), 550, 60 );
   textRHC( "Closed Boundary: " + (poly.isClosed()?"True":"False"), 550, 40 );
   textRHC( "Simple Boundary: " + (poly.isSimple()?"True":"False"), 550, 20 );
-  
+
   for( int i = 0; i < points.size(); i++ ){
     textRHC( i, points.get(i).p.x+5, points.get(i).p.y+15 );
   }
-  
-  if( saveImage ) saveFrame( ); 
+
+  if( saveImage ) saveFrame( );
   saveImage = false;
-  
+
   // ---------- Art Gallery ---------------
   if (solveArtGallery && poly.isSimple()){
     poly.earClipping();
@@ -112,11 +113,11 @@ void draw(){
     if (showColoring){
      poly.drawColoring();
     }
-    
+
   }
   //---------------
-  
-  
+
+
 }
 
 void keyPressed(){
@@ -124,6 +125,7 @@ void keyPressed(){
   if( key == 't' ) showTriangulation = !showTriangulation;
   if( key == 'u' ) showDual = !showDual;
   if( key == 'o' ) showColoring = !showColoring;
+
   if( key == 's' ) saveImage = true;
   if( key == 'c' ){ points.clear(); poly = new Polygon(); }
   if( key == 'p' ) showPotentialDiagonals = !showPotentialDiagonals;
@@ -149,7 +151,7 @@ Point sel = null;
 void mousePressed(){
   int mouseXRHC = mouseX;
   int mouseYRHC = height-mouseY;
-  
+
   float dT = 6;
   for( Point p : points ){
     float d = dist( p.p.x, p.p.y, mouseXRHC, mouseYRHC );
@@ -158,7 +160,7 @@ void mousePressed(){
       sel = p;
     }
   }
-  
+
   if( sel == null ){
     sel = new Point(mouseXRHC,mouseYRHC);
     points.add( sel );
@@ -170,16 +172,11 @@ void mouseDragged(){
   int mouseXRHC = mouseX;
   int mouseYRHC = height-mouseY;
   if( sel != null ){
-    sel.p.x = mouseXRHC;   
-    sel.p.y = mouseYRHC;   
+    sel.p.x = mouseXRHC;
+    sel.p.y = mouseYRHC;
   }
 }
 
 void mouseReleased(){
   sel = null;
 }
-
-
-
-
-  
