@@ -577,5 +577,292 @@ class Polygon {
      print("\n");
    }
 
+   // ------------------------------ View Coloring ----------------------
+   void viewColor( ArrayList<Point> viewPoints){
+     print("\n will now color");
+     //print(viewPoints);
+     int colorFill = 120;
+     for (int i = 0; i < viewPoints.size(); i++){ //buildPoly(viewPoints.get(i));
+       buildPoly(viewPoints.get(0));
+       fill(colorFill);
+       colorFill += 100;
+     }
+   }
+   
+   void buildPoly( Point viewPoint){
+     Polygon newPoly = new Polygon();
+     ArrayList<Point> visiblePoints = getVisiblePoints(viewPoint);
+     
+     Point recentPoint = viewPoint;
+     newPoly.p.add(viewPoint);
+     for (int i = 0; i < visiblePoints.size(); i++){
+       
+       Edge extension;
+       
+       float x0 = viewPoint.getX();
+       float y0 = viewPoint.getY();
+       float x1 = visiblePoints.get(i).getX();
+       float y1 = visiblePoints.get(i).getY();
+       ellipse(x0, y0, 40, 1);
+       ellipse(x1, y1, 1, 41);
+       
+       float m = (y1 - y0) / (x1 - x0);
+       float b = y1 - m * x1;
+       stroke(300,0,300);
+       
+       Point pt1 = new Point(x1, y1);
+       Point pt2;
+       
+       if (x0 < x1) pt2 = new Point(height, m * width + b);
+       else if (x0 > x1) pt2 = new Point(0, m + b);
+       else if (y0 < y1) pt2 = new Point(x1, height);
+       else pt2 = new Point(x1, 0);
+       
+       if (showExtensions) line(pt1.getX(), pt1.getY(), pt2.getX(), pt2.getY());
+       extension = new Edge(pt1, pt2);
+       
+       Edge newEdge = createdBoundary(extension, pt1);
+       
+       
+       if (newEdge != null){
+         Edge otherEdge = new Edge(viewPoint, newEdge.p1);
+         // print("sights at " + i + "\n");
+         if (pointSide(visiblePoints.get(i), otherEdge) == 1){
+           print("\nLeft Side?\n");
+           if (poly.cw()){
+             //print("\nadd 1, " + i);
+             Edge addEdge = new Edge(recentPoint, pt1);
+             newPoly.p.add(pt1);
+             newPoly.bdry.add(addEdge);
+             
+             newPoly.p.add(newEdge.p1);
+             newPoly.bdry.add(newEdge);
+             
+             recentPoint = newEdge.p1;
+             
+           } else {
+             //print("\nadd 2, " + i );
+             newPoly.p.add(newEdge.p1);
+             newPoly.bdry.add(newEdge);
+             
+             Edge addEdge = new Edge(recentPoint, pt1);
+             newPoly.p.add(pt1);
+             newPoly.bdry.add(addEdge);
+             
+             recentPoint = pt1;
+           }
+           
+         } else if (pointSide(visiblePoints.get(i), newEdge) == -1){
+           
+           
+           if (poly.cw()){
+             //print("\nadd 3, " + i );
+             newPoly.p.add(newEdge.p1);
+             newPoly.bdry.add(newEdge);
+             
+             Edge addEdge = new Edge(recentPoint, pt1);
+             newPoly.p.add(pt1);
+             newPoly.bdry.add(addEdge);
+             
+             recentPoint = pt1;
+           } else {
+             //print("\nadd 4, " + i );
+             
+             Edge addEdge = new Edge(recentPoint, pt1);
+             newPoly.p.add(pt1);
+             newPoly.bdry.add(addEdge);
+             
+             newPoly.p.add(newEdge.p1);
+             newPoly.bdry.add(newEdge);
+             
+             recentPoint = newEdge.p1;
+           }
+           
+         } else {
+           print ("\nno side " + i );
+           Edge addEdge = new Edge(recentPoint, pt1);
+           newPoly.p.add(pt1);
+           newPoly.bdry.add(addEdge);
+           
+           recentPoint = newEdge.p1;
+         }
+         
+       } else {
+         //print("\nadd 5, " + i );
+         Edge addEdge = new Edge(recentPoint, pt1);
+         newPoly.p.add(pt1);
+         newPoly.bdry.add(addEdge);
+         
+         recentPoint = pt1;
+       }
+     }
+
+     drawPoly(newPoly);
+
+   }
+   int pointSide(Point pt, Edge e){
+     Point pt2 = pt;
+     Point pt3 = pt;
+     print("\nchecking loc: ");
+     for (int i = 0; i < p.size(); i++){
+       if (p.get(i) == pt){
+         if (i == 0){
+           pt2 = p.get(1);
+           pt3 = p.get(p.size() - 1);
+         }
+         else if( i == p.size() - 1){
+           pt2 = p.get(0);
+           pt3 = p.get(i - 1);
+         } else {
+           pt2 = p.get(i + 1);
+           pt3 = p.get(i - 1);
+         }
+       }
+     }
+     if (pt2 == pt) return 0;
+         
+      //((Bx - Ax) * (Y - Ay) - (By - Ay) * (X - Ax))
+       
+     float Ax = e.p0.getX();
+     float Ay = e.p0.getY();
+     float Bx = e.p1.getX();
+     float By = e.p1.getY();
+     
+     if (Ax == pt2.getX()) Ax++;
+     if (Ay == pt2.getY()) Ay++;
+     
+     // determine if either point is on left or right side
+     float location1 = ((Bx - Ax) * (pt2.getY() - Ay) - (By - Ay) * (pt2.getX() - Ax));
+     float location2 = ((Bx - Ax) * (pt3.getY() - Ay) - (By - Ay) * (pt3.getX() - Ax));
+     
+     print("loc1: " + location1 + ", loc2: " + location2);
+     if (location1 > 0 || location2 > 0) return 1;
+     if (location1 < 0 || location2 < 0) return -1;
+         
+     return 0;
+   }
+   
+   void drawPoly(Polygon newpoly){
+     beginShape();
+     
+     for(int i = 0; i < newpoly.p.size(); i++){
+       //print("\n" + newpoly.p.get(i));
+       if (!Float.isNaN(newpoly.p.get(i).getX())){
+         vertex(floor(newpoly.p.get(i).getX()), floor(newpoly.p.get(i).getY()));
+         //print("\n order x: " + floor(newpoly.p.get(i).getX()) + ", y: " + floor(newpoly.p.get(i).getY()));
+       }
+     }
+     print("\n");
+     endShape();
+   }
+   
+   Edge createdBoundary(Edge extension, Point pt1){
+     int col = 0;
+     ArrayList<Point> collisions = new ArrayList<Point>();
+     for (int j = 0; j < bdry.size(); j++){
+       if (extension.intersectionPoint(bdry.get(j)) != null){  
+         Point inter = extension.intersectionPoint(bdry.get(j));
+         col++;
+         //Makes sure that collision from viewpoint is not detected
+         if (inter.getX() != pt1.getX() && inter.getY() != pt1.getY()){
+           ellipse(inter.getX(), inter.getY(), 100, 100);
+           print("\nINTER: " + inter);
+           collisions.add(inter);
+         }         
+       }
+     }
+     print("\nCOL: " + col);
+     Point newVertex = closestPoint(collisions, pt1);
+     if (newVertex != null){ //ellipse(newVertex.getX(), newVertex.getY(), 100, 100);
+       float midPtX = (newVertex.getX() / 2) + (pt1.getX() / 2);
+       float midPtY = (newVertex.getY() / 2) + (pt1.getY() / 2);
+       Point midpoint = new Point(midPtX, midPtY);
+       
+       if (pointInPolygon(midpoint)) {
+         if (showIntersections) ellipse(newVertex.getX(), newVertex.getY(), 30, 30);
+         return new Edge(pt1, newVertex);
+       }
+     }
+     return null;
+   }
+   
+   Point closestPoint(ArrayList<Point> collisions, Point pt1){
+     
+     if (collisions.size() == 0) return null;
+     else if (collisions.size() == 1) return collisions.get(0);
+     
+     float minDistance = dist(pt1.getX(), pt1.getY(), collisions.get(0).getX(), collisions.get(0).getY());
+     Point ret = collisions.get(0);
+     
+     for (int i = 1; i < collisions.size(); i++){
+       float ptDist = dist(pt1.getX(), pt1.getY(), collisions.get(i).getX(), collisions.get(i).getY());
+       if (minDistance > ptDist){
+         minDistance = ptDist;
+         ret = collisions.get(i);
+       }
+     }
+     return ret;
+   }
+   
+   ArrayList<Point> getVisiblePoints(Point viewPoint){
+     // TODO: Determine which of the potential diagonals are actually diagonals
+     ArrayList<Edge> diag = new ArrayList<Edge>();
+     ArrayList<Point> ret  = new ArrayList<Point>();
+     ArrayList<Point> retSorted  = new ArrayList<Point>();
+     int viewSpot = 0;
+     
+     int neighbors[] = {0,0};
+     for (int i = 0; i < p.size(); i++){
+       if (p.get(i) == viewPoint){
+         viewSpot = i;
+         if (i != 0 && i != p.size() - 1){
+           neighbors[0] = i - 1;
+           neighbors[1] = i + 1;
+           ret.add(p.get(i-1));
+           ret.add(p.get(i+1));
+         } else if (i == 0){
+           neighbors[0] = p.size() - 1;
+           neighbors[1] = 1;
+           ret.add(p.get(p.size() - 1));
+           ret.add(p.get(1));
+         } else {
+           neighbors[0] = i - 1;
+           neighbors[1] = 0;
+           ret.add(p.get(i - 1));
+           ret.add(p.get(0));
+         }
+       }
+     }
+     
+     for (int i = 0; i < p.size(); i++){
+       if (p.get(i) != viewPoint && i != neighbors[0] && i != neighbors[1]){
+         Edge newEdge = new Edge(viewPoint, p.get(i));
+         diag.add(newEdge);
+       }
+     }
+     for (int i = 0; i < diag.size(); i++) {
+       // if line is outside of polygon
+       Point midpoint = new Point((diag.get(i).p0.p.x + diag.get(i).p1.p.x)/2, (diag.get(i).p0.p.y + diag.get(i).p1.p.y)/2);
+
+       // if diagonal doesn't cross boundary and isn't outside of polygon, add to list of valid diagonals
+       if (crossesBoundary(diag.get(i)) == false  && pointInPolygon(midpoint) == true){
+         ret.add(diag.get(i).p1);
+       }
+     }
+     
+     
+     for (int i = viewSpot; i < p.size(); i++){
+       for (int j = 0; j < ret.size(); j++){
+         if (p.get(i) == ret.get(j)) retSorted.add(ret.get(j));
+       }
+     }
+     for (int i = 0; i < viewSpot; i++){
+       for (int j = 0; j < ret.size(); j++){
+         if (p.get(i) == ret.get(j)) retSorted.add(ret.get(j));
+       }
+     }
+
+     return retSorted;
+   }
 
 }

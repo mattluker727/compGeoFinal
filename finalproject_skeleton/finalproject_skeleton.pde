@@ -20,6 +20,8 @@ boolean showTriangulation = false;
 boolean showDual = false;
 boolean showColoring = false;
 
+boolean nowColor = false;
+
 
 void setup(){
   size(800,800,P3D);
@@ -121,8 +123,10 @@ void draw(){
     }
 
   }
-  //---------------
-
+  //----------- Coloring ----------
+  if (nowColor){
+    poly.viewColor(poly.p);
+  }
 
 }
 
@@ -136,6 +140,8 @@ void keyPressed(){
   if( key == 'c' ){ points.clear(); poly = new Polygon(); }
   if( key == 'p' ) showPotentialDiagonals = !showPotentialDiagonals;
   if( key == 'd' ) showDiagonals = !showDiagonals;
+  
+  if( key == 'j' ) nowColor = !nowColor;
 }
 
 
