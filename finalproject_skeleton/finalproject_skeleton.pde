@@ -95,6 +95,7 @@ void draw(){
   textRHC( "t: Show triangulation", 10, height-100 );
   textRHC( "u: Show dual", 10, height-120 );
   textRHC( "o: Show coloring", 10, height-140 );
+  textRHC( "v: Show view from a different guard", 10, height-160 );
 
 
 
