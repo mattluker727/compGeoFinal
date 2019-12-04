@@ -371,8 +371,8 @@ class Polygon {
      return false;
    }
 
-   void getDual(){
-     if (solution.size() == 0) return;
+   ArrayList<Point> getDual(){
+     if (solution.size() == 0) return null;
 
      dual.clear();
 
@@ -421,7 +421,7 @@ class Polygon {
      }
      print("\n");
 
-     coloring();
+     return coloring();
    }
 
    // use dfs to find coloring order
@@ -441,7 +441,7 @@ class Polygon {
    }
 
    // use dfs order to color triangulated polygon
-   void coloring(){
+   ArrayList<Point> coloring(){
      red.clear();
      green.clear();
      blue.clear();
@@ -524,6 +524,8 @@ class Polygon {
      for(int i = 0; i < colorSolution.size(); i++ ){
        print(colorSolution.get(i) + " ");
      }
+     
+     return colorSolution;
 
    }
 
@@ -578,16 +580,24 @@ class Polygon {
    }
 
    // ------------------------------ View Coloring ----------------------
+   int colorFill = 120;
+   int currentColor = 0;
    void viewColor( ArrayList<Point> viewPoints){
      print("\n will now color");
      //print(viewPoints);
-     int colorFill = 120;
-     for (int i = 0; i < viewPoints.size(); i++){ //buildPoly(viewPoints.get(i));
-       buildPoly(viewPoints.get(0));
-       fill(colorFill);
+
+     if (changeColor) {
+       currentColor++;
        colorFill += 100;
+       changeColor = false;
+       if (currentColor == viewPoints.size()) currentColor = 0;
      }
-   }
+     buildPoly(viewPoints.get(currentColor));
+     fill(colorFill);
+   
+     }
+   
+   
    
    void buildPoly( Point viewPoint){
      Polygon newPoly = new Polygon();
@@ -618,7 +628,7 @@ class Polygon {
        else if (y0 < y1) pt2 = new Point(x1, height);
        else pt2 = new Point(x1, 0);
        
-       if (showExtensions) line(pt1.getX(), pt1.getY(), pt2.getX(), pt2.getY());
+       if (debugInfo) line(pt1.getX(), pt1.getY(), pt2.getX(), pt2.getY());
        extension = new Edge(pt1, pt2);
        
        Edge newEdge = createdBoundary(extension, pt1);
@@ -765,7 +775,7 @@ class Polygon {
          col++;
          //Makes sure that collision from viewpoint is not detected
          if (inter.getX() != pt1.getX() && inter.getY() != pt1.getY()){
-           ellipse(inter.getX(), inter.getY(), 100, 100);
+           if (debugInfo) ellipse(inter.getX(), inter.getY(), 100, 100);
            print("\nINTER: " + inter);
            collisions.add(inter);
          }         
@@ -779,7 +789,7 @@ class Polygon {
        Point midpoint = new Point(midPtX, midPtY);
        
        if (pointInPolygon(midpoint)) {
-         if (showIntersections) ellipse(newVertex.getX(), newVertex.getY(), 30, 30);
+         if (debugInfo) ellipse(newVertex.getX(), newVertex.getY(), 30, 30);
          return new Edge(pt1, newVertex);
        }
      }

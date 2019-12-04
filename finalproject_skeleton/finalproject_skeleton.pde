@@ -21,6 +21,8 @@ boolean showDual = false;
 boolean showColoring = false;
 
 boolean nowColor = false;
+boolean changeColor = false;
+boolean debugInfo = false;
 
 
 void setup(){
@@ -111,7 +113,7 @@ void draw(){
   // ---------- Art Gallery ---------------
   if (solveArtGallery && poly.isSimple()){
     poly.earClipping();
-    poly.getDual();
+    ArrayList<Point> colorAnswer = poly.getDual();
     if (showTriangulation){
      poly.drawTriangulation();
     }
@@ -121,13 +123,11 @@ void draw(){
     if (showColoring){
      poly.drawColoring();
     }
-
+   //----------- Coloring ----------   
+    if (nowColor){
+      poly.viewColor(colorAnswer);
+    }
   }
-  //----------- Coloring ----------
-  if (nowColor){
-    poly.viewColor(poly.p);
-  }
-
 }
 
 void keyPressed(){
@@ -142,6 +142,8 @@ void keyPressed(){
   if( key == 'd' ) showDiagonals = !showDiagonals;
   
   if( key == 'j' ) nowColor = !nowColor;
+  if( key == 'k' ) debugInfo = !debugInfo;
+  if( key == 'v' ) changeColor = !changeColor;
 }
 
 
