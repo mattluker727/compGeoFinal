@@ -15,6 +15,12 @@ boolean showVision = false;
 boolean showExtensions = false;
 boolean showIntersections = false;
 
+boolean solveArtGallery = false;
+boolean showTriangulation = false;
+boolean showDual = false;
+boolean showColoring = false;
+
+
 void setup(){
   size(800,800,P3D);
   frameRate(30);
