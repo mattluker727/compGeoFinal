@@ -590,9 +590,9 @@ class Polygon {
        currentColor++;
        colorFill += 100;
        changeColor = false;
-       if (currentColor == viewPoints.size()) currentColor = 0;
      }
-     buildPoly(viewPoints.get(currentColor));
+     if (currentColor >= viewPoints.size()) currentColor = 0;
+     if (showColoring) buildPoly(viewPoints.get(currentColor));
      fill(colorFill);
    
      }
@@ -613,7 +613,7 @@ class Polygon {
        float y0 = viewPoint.getY();
        float x1 = visiblePoints.get(i).getX();
        float y1 = visiblePoints.get(i).getY();
-       ellipse(x0, y0, 40, 1);
+       ellipse(x0, y0, 40, 40);
        ellipse(x1, y1, 1, 41);
        
        float m = (y1 - y0) / (x1 - x0);
@@ -632,7 +632,6 @@ class Polygon {
        extension = new Edge(pt1, pt2);
        
        Edge newEdge = createdBoundary(extension, pt1);
-       
        
        if (newEdge != null){
          Edge otherEdge = new Edge(viewPoint, newEdge.p1);
@@ -662,7 +661,7 @@ class Polygon {
              recentPoint = pt1;
            }
            
-         } else if (pointSide(visiblePoints.get(i), newEdge) == -1){
+         } else if (pointSide(visiblePoints.get(i), otherEdge) == -1){
            
            
            if (poly.cw()){
@@ -746,9 +745,11 @@ class Polygon {
      float location2 = ((Bx - Ax) * (pt3.getY() - Ay) - (By - Ay) * (pt3.getX() - Ax));
      
      print("loc1: " + location1 + ", loc2: " + location2);
-     if (location1 > 0 || location2 > 0) return 1;
-     if (location1 < 0 || location2 < 0) return -1;
-         
+     if ( location2 > 0) return 1;
+     if ( location2 < 0) return -1;
+     if ( location1 > 0) return 1;  
+     if ( location1 < 0) return -1;
+     print("\nNO SIDE loc1: " + location1 + ", loc2: " + location2);
      return 0;
    }
    
@@ -767,12 +768,10 @@ class Polygon {
    }
    
    Edge createdBoundary(Edge extension, Point pt1){
-     int col = 0;
      ArrayList<Point> collisions = new ArrayList<Point>();
      for (int j = 0; j < bdry.size(); j++){
        if (extension.intersectionPoint(bdry.get(j)) != null){  
          Point inter = extension.intersectionPoint(bdry.get(j));
-         col++;
          //Makes sure that collision from viewpoint is not detected
          if (inter.getX() != pt1.getX() && inter.getY() != pt1.getY()){
            if (debugInfo) ellipse(inter.getX(), inter.getY(), 100, 100);
@@ -781,8 +780,9 @@ class Polygon {
          }         
        }
      }
-     print("\nCOL: " + col);
+     // print("\ncollisions: " + collisions);
      Point newVertex = closestPoint(collisions, pt1);
+     // print("\n newVertex: " +newVertex);
      if (newVertex != null){ //ellipse(newVertex.getX(), newVertex.getY(), 100, 100);
        float midPtX = (newVertex.getX() / 2) + (pt1.getX() / 2);
        float midPtY = (newVertex.getY() / 2) + (pt1.getY() / 2);

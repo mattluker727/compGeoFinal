@@ -26,7 +26,7 @@ boolean debugInfo = false;
 
 
 void setup(){
-  size(800,600,P3D);
+  size(750,750,P3D);
   frameRate(30);
 }
 
@@ -60,8 +60,8 @@ void draw(){
   }
 
   stroke( 100, 100, 100 );
-  if( poly.ccw() ) stroke( 100, 200, 100 );
-  if( poly.cw()  ) stroke( 200, 100, 100 );
+  //if( poly.ccw() ) stroke( 100, 200, 100 );
+  //if( poly.cw()  ) stroke( 200, 100, 100 );
   poly.draw();
 
 
