@@ -812,6 +812,9 @@ class Polygon {
      ArrayList<Point> retSorted  = new ArrayList<Point>();
      int viewSpot = 0;
      
+     
+     
+     
      int neighbors[] = {0,0};
      for (int i = 0; i < p.size(); i++){
        if (p.get(i) == viewPoint){

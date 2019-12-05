@@ -88,15 +88,12 @@ void draw(){
   textSize(18);
 
   textRHC( "Controls", 10, height-20 );
-  textRHC( "d: Show/Hide Diagonals", 10, height-40 );
-  textRHC( "p: Show/Hide Potential Diagonals", 10, height-60 );
-  // textRHC( "c: Clear Polygon", 10, height-80 );
-  // textRHC( "s: Save Image", 10, height-100 );
-  textRHC( "a: Solve Art Gallery", 10, height-80 );
-  textRHC( "t: Show triangulation", 10, height-100 );
-  textRHC( "u: Show dual", 10, height-120 );
-  textRHC( "o: Show coloring", 10, height-140 );
-  textRHC( "v: Show view from a different guard", 10, height-160 );
+  textRHC( "r: Reset", 10, height-40 );
+  textRHC( "t: Show triangulation", 10, height-60 );
+  textRHC( "d: Show dual", 10, height-80 );
+  textRHC( "c: Show coloring", 10, height-100 );
+  textRHC( "g: Show guard covering (current guard shown by pink circle)", 10, height-120 );
+  textRHC( "v: Show view from a different guard", 10, height-140 );
 
 
 
@@ -133,17 +130,28 @@ void draw(){
 }
 
 void keyPressed(){
-  //if( key == 'a' ) solveArtGallery = true;
+  // reset
+  if( key == 'r' ) {
+    poly.p.clear();
+    poly.bdry.clear();
+    points.clear();
+    triangles.clear();
+    edges.clear();
+    showDual = false;
+    showColors = false;
+    nowColor = false;
+    showPotentialDiagonals = false;
+    showDiagonals = false;
+    showTriangulation = false;
+  }
   if( key == 't' ) showTriangulation = !showTriangulation;
-  if( key == 'u' ) showDual = !showDual;
-  if( key == 'o' ) showColors = !showColors;
-  if( key == 'p' ) showPotentialDiagonals = !showPotentialDiagonals;
-  if( key == 'd' ) showDiagonals = !showDiagonals;
-  if( key == 'k' ) debugInfo = !debugInfo;
+  if( key == 'd' ) showDual = !showDual;
+  if( key == 'c' ) showColors = !showColors;
+  // change to different guard
   if( key == 'v' ) changeColor = !changeColor;
-  if( key == 'a' ) {
+  // show guard view
+  if( key == 'g' ) {
     nowColor = !nowColor;
-    //showColoring = true;
   }
 }
 
