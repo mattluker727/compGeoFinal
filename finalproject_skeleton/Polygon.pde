@@ -613,7 +613,9 @@ class Polygon {
        float y0 = viewPoint.getY();
        float x1 = visiblePoints.get(i).getX();
        float y1 = visiblePoints.get(i).getY();
-       ellipse(x0, y0, 40, 40);
+       stroke(0);
+       ellipse(x0, y0, 1, 45);
+       ellipse(x0, y0, 45, 1);
        //ellipse(x1, y1, 1, 41);
        
        float m = (y1 - y0) / (x1 - x0);

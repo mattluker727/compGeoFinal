@@ -92,7 +92,7 @@ void draw(){
   textRHC( "t: Show triangulation", 10, height-60 );
   textRHC( "d: Show dual", 10, height-80 );
   textRHC( "c: Show coloring", 10, height-100 );
-  textRHC( "g: Show guard covering (current guard shown by pink circle)", 10, height-120 );
+  textRHC( "g: Show guard covering (current guard shown by black crosshairs)", 10, height-120 );
   textRHC( "v: Show view from a different guard", 10, height-140 );
 
 
