@@ -66,28 +66,21 @@ class Edge{
     boolean eq = false;
     if (p0.p.x == p1.p.x){
       PVector replacement = new PVector(p0.p.x+.01, p0.p.y);
-      //PVector replacement = new PVector(other.p0.p.x+.01, other.p0.p.y);
       P0 = replacement;
-      print("\nEQUSLSSSS");
       eq = !eq;
     }
     if (p0.p.y == p1.p.y){
       PVector replacement = new PVector(p0.p.x, p0.p.y+1);
-      //PVector replacement = new PVector(other.p0.p.x+.01, other.p0.p.y);
       P0 = replacement;
-      print("\nEQUSLSSSS");
       eq = !eq;
     }
     
     PVector D  = PVector.sub( p1.p, p0.p );
     PVector Q  = PVector.sub( other.p1.p, other.p0.p );
     PVector R  = PVector.sub( P1, P0 );
-    
-    if (p0.p.x == p1.p.x) print("\nP0: " + P0 + ", P1: " + P1 + ", D: " + D); 
-     
+         
     float u = R.cross(D).z / D.cross(Q).z;
     if( u < 0 || u > 1 ){
-      if (eq) print("\nRETURNING1 " + R.cross(D).z + " " + D.cross(Q).z);
        return null;
     }
      
@@ -99,14 +92,11 @@ class Edge{
 
     
     if( t < 0 || t > 1 ){
-      if (eq) print("\nRETURNING2");
       return null;
     }
      
     PVector P = PVector.add( P1, PVector.mult( Q, u ) );
     
-    Point newP = new Point(P);
-    if (newP.getX() == Float.NaN) print("\nNAAAAAN");
     return new Point( P );     
   }
   

@@ -614,7 +614,7 @@ class Polygon {
        float x1 = visiblePoints.get(i).getX();
        float y1 = visiblePoints.get(i).getY();
        ellipse(x0, y0, 40, 40);
-       ellipse(x1, y1, 1, 41);
+       //ellipse(x1, y1, 1, 41);
        
        float m = (y1 - y0) / (x1 - x0);
        float b = y1 - m * x1;
@@ -637,9 +637,8 @@ class Polygon {
          Edge otherEdge = new Edge(viewPoint, newEdge.p1);
          // print("sights at " + i + "\n");
          if (pointSide(visiblePoints.get(i), otherEdge) == 1){
-           print("\nLeft Side?\n");
+           //print("\nLeft Side\n");
            if (poly.cw()){
-             //print("\nadd 1, " + i);
              Edge addEdge = new Edge(recentPoint, pt1);
              newPoly.p.add(pt1);
              newPoly.bdry.add(addEdge);
@@ -650,7 +649,6 @@ class Polygon {
              recentPoint = newEdge.p1;
              
            } else {
-             //print("\nadd 2, " + i );
              newPoly.p.add(newEdge.p1);
              newPoly.bdry.add(newEdge);
              
@@ -665,7 +663,6 @@ class Polygon {
            
            
            if (poly.cw()){
-             //print("\nadd 3, " + i );
              newPoly.p.add(newEdge.p1);
              newPoly.bdry.add(newEdge);
              
@@ -675,7 +672,6 @@ class Polygon {
              
              recentPoint = pt1;
            } else {
-             //print("\nadd 4, " + i );
              
              Edge addEdge = new Edge(recentPoint, pt1);
              newPoly.p.add(pt1);
@@ -688,7 +684,6 @@ class Polygon {
            }
            
          } else {
-           print ("\nno side " + i );
            Edge addEdge = new Edge(recentPoint, pt1);
            newPoly.p.add(pt1);
            newPoly.bdry.add(addEdge);
@@ -697,7 +692,6 @@ class Polygon {
          }
          
        } else {
-         //print("\nadd 5, " + i );
          Edge addEdge = new Edge(recentPoint, pt1);
          newPoly.p.add(pt1);
          newPoly.bdry.add(addEdge);
@@ -712,7 +706,7 @@ class Polygon {
    int pointSide(Point pt, Edge e){
      Point pt2 = pt;
      Point pt3 = pt;
-     print("\nchecking loc: ");
+     // print("\nchecking loc: ");
      for (int i = 0; i < p.size(); i++){
        if (p.get(i) == pt){
          if (i == 0){
@@ -744,12 +738,11 @@ class Polygon {
      float location1 = ((Bx - Ax) * (pt2.getY() - Ay) - (By - Ay) * (pt2.getX() - Ax));
      float location2 = ((Bx - Ax) * (pt3.getY() - Ay) - (By - Ay) * (pt3.getX() - Ax));
      
-     print("loc1: " + location1 + ", loc2: " + location2);
+     // print("loc1: " + location1 + ", loc2: " + location2);
      if ( location2 > 0) return 1;
      if ( location2 < 0) return -1;
      if ( location1 > 0) return 1;  
      if ( location1 < 0) return -1;
-     print("\nNO SIDE loc1: " + location1 + ", loc2: " + location2);
      return 0;
    }
    
@@ -775,19 +768,17 @@ class Polygon {
          //Makes sure that collision from viewpoint is not detected
          if (inter.getX() != pt1.getX() && inter.getY() != pt1.getY()){
            if (debugInfo) ellipse(inter.getX(), inter.getY(), 100, 100);
-           print("\nINTER: " + inter);
-           collisions.add(inter);
+           if (!Float.isNaN(inter.getX()))collisions.add(inter);
          }         
        }
      }
      // print("\ncollisions: " + collisions);
      Point newVertex = closestPoint(collisions, pt1);
-     // print("\n newVertex: " +newVertex);
      if (newVertex != null){ //ellipse(newVertex.getX(), newVertex.getY(), 100, 100);
        float midPtX = (newVertex.getX() / 2) + (pt1.getX() / 2);
        float midPtY = (newVertex.getY() / 2) + (pt1.getY() / 2);
        Point midpoint = new Point(midPtX, midPtY);
-       
+ 
        if (pointInPolygon(midpoint)) {
          if (debugInfo) ellipse(newVertex.getX(), newVertex.getY(), 30, 30);
          return new Edge(pt1, newVertex);
