@@ -558,7 +558,7 @@ class Polygon {
      fill(255, 0, 0);
      for(int i = 0; i < red.size(); i++ ){
        print(red.get(i) + " ");
-       ellipse(red.get(i).p.x, red.get(i).p.y, 20, 20);
+       if (showColors) ellipse(red.get(i).p.x, red.get(i).p.y, 20, 20);
      }
      print("\nGreen:\t");
      fill(0, 255, 0);
@@ -566,7 +566,7 @@ class Polygon {
      // green
      for(int i = 0; i < green.size(); i++ ){
        print(green.get(i) + " ");
-       ellipse(green.get(i).p.x, green.get(i).p.y, 20, 20);
+       if (showColors) ellipse(green.get(i).p.x, green.get(i).p.y, 20, 20);
      }
      print("\nBlue:\t");
      fill(0, 0, 255);
@@ -574,7 +574,7 @@ class Polygon {
      // blue
      for(int i = 0; i < blue.size(); i++ ){
        print(blue.get(i) + " ");
-       ellipse(blue.get(i).p.x, blue.get(i).p.y, 20, 20);
+       if (showColors) ellipse(blue.get(i).p.x, blue.get(i).p.y, 20, 20);
      }
      print("\n");
    }

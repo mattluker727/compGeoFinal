@@ -14,11 +14,12 @@ boolean showArtGallery = false;
 boolean showVision = false;
 boolean showExtensions = false;
 boolean showIntersections = false;
+boolean showColors = false;
 
 boolean solveArtGallery = true;
 boolean showTriangulation = false;
 boolean showDual = false;
-boolean showColoring = false;
+boolean showColoring = true;
 
 boolean nowColor = false;
 boolean changeColor = false;
@@ -135,14 +136,14 @@ void keyPressed(){
   //if( key == 'a' ) solveArtGallery = true;
   if( key == 't' ) showTriangulation = !showTriangulation;
   if( key == 'u' ) showDual = !showDual;
-  if( key == 'o' ) showColoring = !showColoring;
+  if( key == 'o' ) showColors = !showColors;
   if( key == 'p' ) showPotentialDiagonals = !showPotentialDiagonals;
   if( key == 'd' ) showDiagonals = !showDiagonals;
   if( key == 'k' ) debugInfo = !debugInfo;
   if( key == 'v' ) changeColor = !changeColor;
   if( key == 'a' ) {
     nowColor = !nowColor;
-    showColoring = true;
+    //showColoring = true;
   }
 }
 
